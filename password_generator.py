@@ -1,46 +1,62 @@
 import random
+import string 
 
-print("*** WELCOME TO PASSWORD GENERATOR ***")
-print("Help us to customize password you like!\n")
 
-pass_len=int(input("Please enter password length you like: "))
-while pass_len<=0:
-  pass_len=int(input("Please enter correct password length you like: "))
+#User input function
+def yes_no_input(message):
 
-upper_case=input("Should it include uppercase characters, enter yes or no : ").lower()
-while upper_case not in ("yes","no"):
-  upper_case=input("INVALID INPUT!\nShould it include uppercase characters? Enter only yes or no : ").lower()
+    answer = input(message).lower()
 
-lower_case=input("Should it include lowercase characters, enter yes or no : ").lower()
-while lower_case not in ("yes","no"):
-  lower_case=input("INVALID INPUT!\nShould it include lowercase characters? Enter only yes or no : ").lower()
+    while answer not in ("yes", "no"):
+        answer = input("INVALID INPUT!\nPlease enter yes or no: ").lower()
 
-num=input("Should it include numbers, enter yes or no : ").lower()
-while num not in ("yes","no"):
-  num=input("INVALID INPUT!\nShould it include numbers? Enter only yes or no : ").lower()
-
-special=input("Should it include special characters, enter yes or no : ").lower()
-while special not in ("yes","no"):
-  special=input("INVALID INPUT!\nShould it include special character? Enter only yes or no : ").lower()
+    return answer
+#password length
+def pass_length():
+  while True:
+    try:
+      pass_len=int(input("Please enter password length you like: "))
+      if pass_len>0:
+        return pass_len
+      else:
+        print("Password length should be greater than 0")
+      
+    except ValueError as e:
+      print("Please enter a valid number.") 
+      
 
 #Making characters pool
-characters=""
+def char_pool(upper_case,lower_case,num,special):
+  characters=""
+  
+  if upper_case=="yes":
+    characters+= string.ascii_uppercase
 
-if upper_case=="yes":
-  characters+= "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  if lower_case == "yes":
+      characters += string.ascii_lowercase
 
-if lower_case == "yes":
-    characters += "abcdefghijklmnopqrstuvwxyz"
+  if num == "yes":
+      characters += string.digits
 
-if num == "yes":
-    characters += "0123456789"
+  if special == "yes":
+      characters += string.punctuation
+  return characters
+       
+  
 
-if special == "yes":
-    characters += "!@#$%^&*"
-    
-if upper_case == "no" and lower_case == "no" and num == "no" and special == "no":
-    print("Password must have at least one requirement allowed")
-else:
-  password="".join(random.choices(characters,k=pass_len))
+print("*** WELCOME TO PASSWORD GENERATOR ***")
+print("Help us to customize password you like!\n")     
+pass_len=pass_length()   
+while True:
+  upper_case=yes_no_input("Should it include uppercase characters, enter yes or no : ")
+  lower_case=yes_no_input("Should it include lowercase characters? Enter yes or no : ")
+  num=yes_no_input("Should it include numbers, enter yes or no : ")
+  special=yes_no_input("Should it include special characters, enter yes or no : ")
+  characters=char_pool(upper_case,lower_case,num,special)
+  if characters:
+    break
+  else:
+     print("Password must have at least one requirement allowed.")
+
+password="".join(random.choices(characters,k=pass_len))
 print(f"\nPassword Suggestion: {password}")
-        
